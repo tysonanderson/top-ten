@@ -32,70 +32,68 @@ var width = 700 - margin.left - margin.right,
 
 var textOffset = 6;
 
-var svg = d3.select(".svg-content").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  	.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+var svg = d3.select('.svg-content').append('svg')
+	.attr('width', width + margin.left + margin.right)
+	.attr('height', height + margin.top + margin.bottom)
+	.append('g')
+	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 //scales
 var y = d3.scale.linear().domain([1,10]).range([0,height]);
-var color = d3.scale.ordinal().range(["#d3d3d3","#75c0d8","#c4d676"])
+var color = d3.scale.ordinal().range(['#d3d3d3','#75c0d8','#c4d676']);
 
 //create the diagonal generator for the ranking lines
 //the projection here flips the x and y values so the curve is draw the right way
 var diagonal = d3.svg.diagonal()
-            .source(function (d){
-            	return {'y': 10, 'x': y(d.originalRank)};
-            })
-            .target(function (d){
-            	return {'y': 90, 'x': y(d.sort)};
-            }).projection(function(d) { return [d.y, d.x]; });
+	.source(function (d){
+		return {'y': 10, 'x': y(d.originalRank)};
+	})
+	.target(function (d){
+		return {'y': 90, 'x': y(d.sort)};
+	}).projection(function(d) { return [d.y, d.x]; });
 
 
 //load data file
-d3.csv('data/issues_data.csv', function (data){ 
+d3.csv('data/issues_data.csv', function (data){
 
-		//myData.filter(ccSelected, fteSelected, controlSelected)
 	var theData = new Data(data);
 	theData.init();
 	theData.rank();
 
-
-	var issueElements = svg.selectAll(".issue")
+	var issueElements = svg.selectAll('.issue')
 		.data(theData.summary, function (d){ return d.text })
 		.enter()
-		.append("text")
-		.attr("class", "issue")
+		.append('text')
+		.attr('class', 'issue')
 		.attr('y', function (d,i){ return (y(d.rank) + textOffset)})
 		.attr('x', 30)
 		.text(function (d,i){ return d.text});
 
-	var numLabel = svg.selectAll(".num-label")
+	var numLabel = svg.selectAll('.num-label')
 		.data(theData.summary, function (d){ return d.text })
 		.enter()
-		.append("text")
-		.attr("class", "num-label")
+		.append('text')
+		.attr('class', 'num-label')
 		.attr('y', function (d,i){ return (y(d.rank) + textOffset)})
 		.attr('x', 10)
 		.text(function (d,i){ return d.rank});
 
-	var link = svg.selectAll(".link")
-        .data(theData.rank())
-        .enter().append("path")
-        .attr("class", "link")
-        .attr("stroke", function (d){ return color(d.rank - d.originalRank) })
-        .attr("stroke-width", "3")
-        .attr('fill', 'none')
-        .attr('stroke-opacity', 0)
-        .attr("d", diagonal);
+	var link = svg.selectAll('.link')
+		.data(theData.rank())
+		.enter().append('path')
+		.attr('class', 'link')
+		.attr('stroke', function (d){ return color(d.rank - d.originalRank) })
+		.attr('stroke-width', '3')
+		.attr('fill', 'none')
+		.attr('stroke-opacity', 0)
+		.attr('d', diagonal);
 
-	var issueDots = svg.selectAll(".dot")
+	var issueDots = svg.selectAll('.dot')
 		.data(theData.summary, function (d){ return d.text })
 		.enter()
-		.append("circle")
-		.attr("class", "dot")
-		.attr("fill", function (d){ return getColor(d) })
+		.append('circle')
+		.attr('class', 'dot')
+		.attr('fill', function (d){ return getColor(d) })
 		.attr('r', 5)
 		.attr('cx', 10)
 		.attr('fill-opacity', 0)
@@ -104,7 +102,7 @@ d3.csv('data/issues_data.csv', function (data){
 	var filteredLabel = svg.append('text').attr('opacity', 0).attr('class', 'data-label').attr('x', 83).attr('y', -20).text('Filtered');
 	var originalLabel = svg.append('text').attr('opacity', 0).attr('class', 'data-label').attr('x', 3).attr('y', -20).text('All');
 
-	$('.n-label').html("n="+theData.data.length);
+	$('.n-label').html('n='+theData.data.length);
 
 	$('input').change(function (e){
 
@@ -121,7 +119,7 @@ d3.csv('data/issues_data.csv', function (data){
 			y.domain([1,10]);
 		}
 
-		issueElements = svg.selectAll(".issue")
+		issueElements = svg.selectAll('.issue')
 			.data(theData.rank(),function (d){ return d.text });
 
 		issueElements.transition()
@@ -131,12 +129,12 @@ d3.csv('data/issues_data.csv', function (data){
 			.text(function (d,i){ return d.text});
 
 		issueElements.enter()
-			.append("text")
-			.attr("class", "issue")
+			.append('text')
+			.attr('class', 'issue')
 			.attr('y', function (d,i){ return y(d.sort) + textOffset})
 			.attr('x', 100)
 			.attr('opacity', 0)
-			.text(function (d,i){ return d.rank + ". " + d.text})
+			.text(function (d,i){ return d.rank + '. ' + d.text})
 			.transition()
 			.attr('opacity', 1);
 
@@ -145,54 +143,53 @@ d3.csv('data/issues_data.csv', function (data){
 		numLabel.data(theData.summary, function (d){ return d.text })
 			.transition()
 			.delay(function (d,i){ return d.rank * 50})
-			//.attr('y', function (d,i){ return (y(d.rank) + textOffset) })
-			//.attr('opacity', function (d){ return (d.tie) ? 0 : 1})
 			.attr('x', 100)
 			.attr('y', function (d,i){ 
-			var c = d3.sum( $.map(tieID, function (h){ return (+h-1===+d.sort)? 1 : 0 }) );
-			if(d.tie){
-				return y(d.rank) + ((y(2) - y(1))/2) + textOffset;
-			}
-			else{
-				return (y(d.rank) + textOffset);
+				var c = d3.sum( $.map(tieID, function (h){ return (+h-1===+d.sort)? 1 : 0 }) );
+				if(d.tie){
+					return y(d.rank) + ((y(2) - y(1))/2) + textOffset;
+				}
+				else{
+					return (y(d.rank) + textOffset);
 			}}).text(function (d,i){ return d.rank});
 			
 
 		
 		numLabel.attr('opacity', function (d,i){ 
 			var c = d3.sum( $.map(tieID, function (h){ return (+h-1===+d.sort)? 1 : 0 }) );
-			if(c > 0){
-				return 0;
-			}
-			else{
-				return 1;
-			}})
+				if(c > 0){
+					return 0;
+				}
+				else{
+					return 1;
+				}
+			});
 
 		issueDots.data(theData.rank(),function (d){ return d.text })
 			.transition()
 			.delay(function (d,i){ return d.rank * 50})
-			.attr("fill-opacity", function(d){ return (theData.data.length == 444) ? 0 : 1 })
-			.attr("fill", function (d){ return getColor(d) })
-			.attr('cy', function (d,i){ return y(d.originalRank)});;
+			.attr('fill-opacity', function(d){ return (theData.data.length == 444) ? 0 : 1 })
+			.attr('fill', function (d){ return getColor(d) })
+			.attr('cy', function (d,i){ return y(d.originalRank)});
 
 		issueElements.exit().transition().attr('opacity','0').remove();
 
 		evaluateButtons(theData);
-		$('.n-label').html("n="+theData.data.length);
+		$('.n-label').html('n='+theData.data.length);
 
 		filteredLabel.transition().attr('opacity', 1);
 		originalLabel.transition().attr('opacity', 1);
 
-		var link = svg.selectAll(".link")
-            .data(theData.rank())
-            .transition()
-            .delay(function (d,i){ return d.rank * 50})
-            .attr("stroke", function (d){ return getColor(d) })
-            .attr('stroke-opacity', .4)
-            .attr("d", diagonal);
+		var link = svg.selectAll('.link')
+			.data(theData.rank())
+			.transition()
+			.delay(function (d,i){ return d.rank * 50})
+			.attr('stroke', function (d){ return getColor(d) })
+			.attr('stroke-opacity', .4)
+			.attr('d', diagonal);
 
-	})
-	
+			})
+
 });
 
 //------------------------Data object--------------
@@ -201,7 +198,7 @@ d3.csv('data/issues_data.csv', function (data){
 function Data(data) {
 	this.cf = crossfilter(data);
 	this.data = [];
-}
+};
 //get unfiltered(all) records
 Data.prototype.all = function (){ 
 	var dim = this.cf.dimension(function (d){ return d.fte });
@@ -249,16 +246,16 @@ Data.prototype.summarize = function (){
 
 	var scores = [];
 	//check for what visualization is running
- 	if(TYPE === 'issues'){
- 		scores = $.map(issues2, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
- 	}
- 	else{
- 		scores = [];
- 	}
+	if(TYPE === 'issues'){
+		scores = $.map(issues2, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
+	}
+	else{
+		scores = [];
+	}
 
- 	this.summary = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
- 	
- 	return this.summary;
+	this.summary = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
+
+	return this.summary;
 }
 Data.prototype.rank = function (){
 
@@ -293,18 +290,18 @@ Data.prototype.init = function (){
 
 	var scores = [];
 	//check for what visualization is running
- 	if(TYPE === 'issues'){
- 		scores = $.map(issues2, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
- 	}
- 	else{
- 		scores = [];
- 	}
- 	
- 	//join calculated scores with text by id
- 	var rankedData = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
- 	var sorted = $.map(rankedData, function (d){ return $.extend(d, {'originalScore': d.score}) }).sort(obSort('originalScore'));
+		if(TYPE === 'issues'){
+			scores = $.map(issues2, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
+		}
+		else{
+			scores = [];
+		}
+		
+		//join calculated scores with text by id
+		var rankedData = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
+		var sorted = $.map(rankedData, function (d){ return $.extend(d, {'originalScore': d.score}) }).sort(obSort('originalScore'));
 
- 	//add ranks and check for ties
+		//add ranks and check for ties
 	var previousScore = 0;
 	var currentRank = 0;
 
@@ -315,7 +312,7 @@ Data.prototype.init = function (){
 
 		previousScore = d.originalScore;
 
-		return $.extend(d, {"originalRank":currentRank});
+		return $.extend(d, {'originalRank':currentRank});
 	});
 
 }
@@ -335,7 +332,7 @@ function evaluateButtons(data){
 	var controlSelected = $.map($('.btn-group.control').find('input:checked'), function (d){ return $(d).attr('data') });
 
 	$.map($('.btn-group').find('input:checked'), function (d){ 
-		var c = $(d.parentElement.parentElement).attr('class').split(' ')[1]
+		var c = $(d.parentElement.parentElement).attr('class').split(' ')[1];
 		var n = $(d).attr('data');
 		switch(c){
 			case 'cc':
