@@ -121,8 +121,6 @@ var technologies = [{"text":"802 11ac  wireless networking standard","id":"i19"}
 		{"text":"Augmented reality","id":"i99"},
 		{"text":"Virtual assistants","id":"i100"}];
 
-console.log(technologies)
-
 //initalize svg
 var margin = {top: 40, right: 10, bottom: 20, left: 0};
 
@@ -161,6 +159,7 @@ d3.csv('data/issues_data.csv', function (data){
 			$("h1.title").html("Top-Ten Strategic Technologies: 2014")
 		}
 	}
+	console.log(urlParams)
 
 	var theData = new Data(data);
 	theData.init();
