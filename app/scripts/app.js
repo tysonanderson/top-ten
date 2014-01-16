@@ -3,6 +3,20 @@ define([], function () {
     'use strict';
 });
 
+//get url var for mode switching. REMOVE IN FINAL
+var urlParams;
+(window.onpopstate = function () {
+    var match,
+        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = window.location.search.substring(1);
+
+    urlParams = {};
+    while (match = search.exec(query))
+       urlParams[decode(match[1])] = decode(match[2]);
+})();
+
 var TYPE = 'issues';
 
 var issues2 = [{'text': 'Determining the role of online learning', 'id':'i1'},
@@ -23,6 +37,91 @@ var issues2 = [{'text': 'Determining the role of online learning', 'id':'i1'},
 		{'text': 'Optimizing IT efficiency and excellence', 'id':'i16'},
 		{'text': 'Sourcing technologies and services at scale', 'id':'i17'},
 		{'text': 'Risk mgmt infosec practices', 'id':'i18'}];
+
+var technologies = [{"text":"802 11ac  wireless networking standard","id":"i19"},
+		{"text":"Mesh networking","id":"i20"},
+		{"text":"Softwaredefined networks","id":"i21"},
+		{"text":"Virtual desktops or virtual PC applications","id":"i22"},
+		{"text":"IT accessibility assessment tools","id":"i23"},
+		{"text":"Network performance monitoring tools","id":"i24"},
+		{"text":"Privatecloud storage","id":"i25"},
+		{"text":"Network capacity planning and management tools","id":"i26"},
+		{"text":"Data center capacity planning and management tools","id":"i27"},
+		{"text":"IT asset management tools","id":"i28"},
+		{"text":"Servicelevel reporting tools","id":"i29"},
+		{"text":"Unified communications and collaboration","id":"i30"},
+		{"text":"Ethernet fabrics","id":"i31"},
+		{"text":"Biometric authentication","id":"i32"},
+		{"text":"Contentaware DLP","id":"i33"},
+		{"text":"Database encryption","id":"i34"},
+		{"text":"Esignatures","id":"i35"},
+		{"text":"Email encryption","id":"i36"},
+		{"text":"Ent identity and access mgmt solns","id":"i37"},
+		{"text":"Federated ID management","id":"i38"},
+		{"text":"PCI data security standards","id":"i39"},
+		{"text":"Strong authentication for critical applications","id":"i40"},
+		{"text":"Enterprise GRC systems","id":"i41"},
+		{"text":"Digital preservation of research data","id":"i42"},
+		{"text":"Digital repositories for researchers and scholars","id":"i43"},
+		{"text":"Open content","id":"i44"},
+		{"text":"Selfpublishing","id":"i45"},
+		{"text":"Cloudbased HPC","id":"i46"},
+		{"text":"Mobile apps for enterprise applications","id":"i47"},
+		{"text":"Mobile app development","id":"i48"},
+		{"text":"Mobile data protection","id":"i49"},
+		{"text":"Mobile device management","id":"i50"},
+		{"text":"Adaptive learning","id":"i51"},
+		{"text":"Badging open digital microcredentials","id":"i52"},
+		{"text":"Eportfolios","id":"i53"},
+		{"text":"Ebook readers etextbooks","id":"i54"},
+		{"text":"Gamification","id":"i55"},
+		{"text":"Mashware","id":"i56"},
+		{"text":"Online courses on mobile devices","id":"i57"},
+		{"text":"Cloudbased academic applications","id":"i58"},
+		{"text":"Admin or business performance analytics","id":"i59"},
+		{"text":"Analytics","id":"i60"},
+		{"text":"BI reporting dashboards","id":"i61"},
+		{"text":"Mobile BI","id":"i62"},
+		{"text":"Big data","id":"i63"},
+		{"text":"Data warehouse","id":"i64"},
+		{"text":"Hadoop","id":"i65"},
+		{"text":"Learning analytics Course level","id":"i66"},
+		{"text":"Learning analytics Degree advising","id":"i67"},
+		{"text":"Predictive analytics","id":"i68"},
+		{"text":"Talent workforce analytics","id":"i69"},
+		{"text":"Text content analytics","id":"i70"},
+		{"text":"Cloudbased admin ent applications","id":"i71"},
+		{"text":"Cloudbased email for faculty and staff","id":"i72"},
+		{"text":"Cloudbased office productivity suites","id":"i73"},
+		{"text":"Application PaaS","id":"i74"},
+		{"text":"IaaS","id":"i75"},
+		{"text":"Cloudbased video streaming solutions","id":"i76"},
+		{"text":"Cloudbased voice solutions","id":"i77"},
+		{"text":"Hybrid cloud computing","id":"i78"},
+		{"text":"Cloudbased security services","id":"i79"},
+		{"text":"Institutional support for public cloud storage","id":"i80"},
+		{"text":"3D printing","id":"i81"},
+		{"text":"3D scanners","id":"i82"},
+		{"text":"Tablet computing","id":"i83"},
+		{"text":"The internet of things","id":"i84"},
+		{"text":"Social media","id":"i85"},
+		{"text":"Location intelligence","id":"i86"},
+		{"text":"Speech recognition","id":"i87"},
+		{"text":"Virtual environments","id":"i88"},
+		{"text":"CRM for admissions and enrollment","id":"i89"},
+		{"text":"Big data","id":"i90"},
+		{"text":"Hadoop","id":"i91"},
+		{"text":"Extreme lowenergy servers","id":"i92"},
+		{"text":"Inmemory computing","id":"i93"},
+		{"text":"Hybrid cloud computing","id":"i94"},
+		{"text":"Power over Ethernet","id":"i95"},
+		{"text":"Quantum computing for researchers","id":"i96"},
+		{"text":"Activity streams","id":"i97"},
+		{"text":"Affective computing","id":"i98"},
+		{"text":"Augmented reality","id":"i99"},
+		{"text":"Virtual assistants","id":"i100"}];
+
+console.log(technologies)
 
 //initalize svg
 var margin = {top: 40, right: 10, bottom: 20, left: 0};
@@ -56,27 +155,58 @@ var diagonal = d3.svg.diagonal()
 //load data file
 d3.csv('data/issues_data.csv', function (data){
 
+	if(urlParams.mode!=undefined){
+		if(urlParams.mode==='technologies'){
+			TYPE = 'technologies';
+			$("h1.title").html("Top-Ten Strategic Technologies: 2014")
+		}
+	}
+
 	var theData = new Data(data);
 	theData.init();
 	theData.rank();
 
+	if( theData.rank().filter(function (d){return d.sort == 11})[0].tie ){
+		y.domain([1,11]);
+	}
+	else{
+		y.domain([1,10]);
+	}
+
+	var tieID = $.map(theData.rank(), function (d){ return (d.tie) ? d.sort : null });
+
 	var issueElements = svg.selectAll('.issue')
-		.data(theData.summary, function (d){ return d.text })
+		.data(theData.summary, function (d){ return d.id })
 		.enter()
 		.append('text')
 		.attr('class', 'issue')
-		.attr('y', function (d,i){ return (y(d.rank) + textOffset)})
+		.attr('y', function (d,i){ return (y(d.sort) + textOffset)})
 		.attr('x', 30)
 		.text(function (d,i){ return d.text});
 
 	var numLabel = svg.selectAll('.num-label')
-		.data(theData.summary, function (d){ return d.text })
+		.data(theData.summary, function (d){ return d.id })
 		.enter()
 		.append('text')
 		.attr('class', 'num-label')
-		.attr('y', function (d,i){ return (y(d.rank) + textOffset)})
 		.attr('x', 10)
-		.text(function (d,i){ return d.rank});
+		.attr('y', function (d,i){ 
+				if(d.tie){
+					return y(d.rank) + ((y(2) - y(1))/2) + textOffset;
+				}
+				else{
+					return (y(d.rank) + textOffset);
+			}}).text(function (d,i){ return d.rank});
+
+	numLabel.attr('opacity', function (d,i){ 
+			var c = d3.sum( $.map(tieID, function (h){ return (+h-1===+d.sort)? 1 : 0 }) );
+				if(c > 0){
+					return 0;
+				}
+				else{
+					return 1;
+				}
+			});
 
 	var link = svg.selectAll('.link')
 		.data(theData.rank())
@@ -89,7 +219,7 @@ d3.csv('data/issues_data.csv', function (data){
 		.attr('d', diagonal);
 
 	var issueDots = svg.selectAll('.dot')
-		.data(theData.summary, function (d){ return d.text })
+		.data(theData.summary, function (d){ return d.id })
 		.enter()
 		.append('circle')
 		.attr('class', 'dot')
@@ -120,7 +250,7 @@ d3.csv('data/issues_data.csv', function (data){
 		}
 
 		issueElements = svg.selectAll('.issue')
-			.data(theData.rank(),function (d){ return d.text });
+			.data(theData.rank(),function (d){ return d.id });
 
 		issueElements.transition()
 			.delay(function (d,i){ return d.rank * 50})
@@ -140,20 +270,17 @@ d3.csv('data/issues_data.csv', function (data){
 
 		var tieID = $.map(theData.rank(), function (d){ return (d.tie) ? d.sort : null });
 
-		numLabel.data(theData.summary, function (d){ return d.text })
+		numLabel.data(theData.summary, function (d,i){ return d.id })
 			.transition()
 			.delay(function (d,i){ return d.rank * 50})
 			.attr('x', 100)
 			.attr('y', function (d,i){ 
-				var c = d3.sum( $.map(tieID, function (h){ return (+h-1===+d.sort)? 1 : 0 }) );
 				if(d.tie){
 					return y(d.rank) + ((y(2) - y(1))/2) + textOffset;
 				}
 				else{
 					return (y(d.rank) + textOffset);
 			}}).text(function (d,i){ return d.rank});
-			
-
 		
 		numLabel.attr('opacity', function (d,i){ 
 			var c = d3.sum( $.map(tieID, function (h){ return (+h-1===+d.sort)? 1 : 0 }) );
@@ -165,7 +292,7 @@ d3.csv('data/issues_data.csv', function (data){
 				}
 			});
 
-		issueDots.data(theData.rank(),function (d){ return d.text })
+		issueDots.data(theData.rank(),function (d){ return d.id })
 			.transition()
 			.delay(function (d,i){ return d.rank * 50})
 			.attr('fill-opacity', function(d){ return (theData.data.length == 444) ? 0 : 1 })
@@ -248,12 +375,12 @@ Data.prototype.summarize = function (){
 	//check for what visualization is running
 	if(TYPE === 'issues'){
 		scores = $.map(issues2, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
+		this.summary = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
 	}
 	else{
-		scores = [];
+		scores = $.map(technologies, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
+		this.summary = technologies.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
 	}
-
-	this.summary = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
 
 	return this.summary;
 }
@@ -265,7 +392,7 @@ Data.prototype.rank = function (){
 	var currentRank = 0;
 
 	return $.map(sorted, function (d,i){
-		if(Math.abs(d.score - previousScore) > .01) {
+		if(Math.abs(d.score - previousScore) > .001) {
 			currentRank += 1;
 			d.rank = currentRank;
 			d.tie = false;
@@ -292,13 +419,20 @@ Data.prototype.init = function (){
 	//check for what visualization is running
 		if(TYPE === 'issues'){
 			scores = $.map(issues2, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
+			this.summary = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
+
+			//join calculated scores with text by id
+			var rankedData = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
 		}
 		else{
-			scores = [];
+			scores = $.map(technologies, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
+			this.summary = technologies.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
+
+			//join calculated scores with text by id
+			var rankedData = technologies.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
 		}
 		
-		//join calculated scores with text by id
-		var rankedData = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
+		
 		var sorted = $.map(rankedData, function (d){ return $.extend(d, {'originalScore': d.score}) }).sort(obSort('originalScore'));
 
 		//add ranks and check for ties
@@ -306,7 +440,7 @@ Data.prototype.init = function (){
 	var currentRank = 0;
 
 	this.summary = $.map(sorted, function (d){
-		if(Math.abs(d.originalScore - previousScore) > .01) {
+		if(Math.abs(d.originalScore - previousScore) > .001) {
 			currentRank += 1;
 		}
 
