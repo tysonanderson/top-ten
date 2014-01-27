@@ -4,24 +4,24 @@ define(['d3'], function (d3) {
 
 var TYPE = $('.container').attr('vismode');
 
-var issues2 = [{'text': 'Determining the role of online learning', 'id':'i1'},
-		{'text': 'Improving student outcomes', 'id':'i2'},
-		{'text': 'Using analytics', 'id':'i3'},
-		{'text': 'Developing an IT org model', 'id':'i4'},
-		{'text': 'Assisting faculty with instructional integration', 'id':'i5'},
-		{'text': 'Addressing access demand', 'id':'i6'},
-		{'text': 'Balancing innovation with execution', 'id':'i7'},
-		{'text': 'Competing for IT talent', 'id':'i8'},
-		{'text': 'Establishing and implementing IT governance', 'id':'i9'},
-		{'text': 'Changing IT funding models', 'id':'i10'},
-		{'text': 'Establishing partnership between IT and leadership', 'id':'i11'},
-		{'text': 'Harnessing the trends toward consumerization', 'id':'i12'},
-		{'text': 'Supporting the research mission', 'id':'i13'},
-		{'text': 'Developing an enterprise IT architecture', 'id':'i14'},
-		{'text': 'Identifying new models', 'id':'i15'},
-		{'text': 'Optimizing IT efficiency and excellence', 'id':'i16'},
-		{'text': 'Sourcing technologies and services at scale', 'id':'i17'},
-		{'text': 'Risk mgmt infosec practices', 'id':'i18'}];
+var issues2 = [{"text": "Determining the role of online learning", "id":"i1"},
+		{"text": "Improving student outcomes", "id":"i2"},
+		{"text": "Using analytics", "id":"i3"},
+		{"text": "Developing an IT org model", "id":"i4"},
+		{"text": "Assisting faculty with instructional integration", "id":"i5"},
+		{"text": "Addressing access demand", "id":"i6"},
+		{"text": "Balancing innovation with execution", "id":"i7"},
+		{"text": "Competing for IT talent", "id":"i8"},
+		{"text": "Establishing and implementing IT governance", "id":"i9"},
+		{"text": "Changing IT funding models", "id":"i10"},
+		{"text": "Establishing partnership between IT and leadership", "id":"i11"},
+		{"text": "Harnessing the trends toward consumerization", "id":"i12"},
+		{"text": "Supporting the research mission", "id":"i13"},
+		{"text": "Developing an enterprise IT architecture", "id":"i14"},
+		{"text": "Identifying new models", "id":"i15"},
+		{"text": "Optimizing IT efficiency and excellence", "id":"i16"},
+		{"text": "Sourcing technologies and services at scale", "id":"i17"},
+		{"text": "Risk mgmt infosec practices", "id":"i18"}];
 
 var technologies = [{"text":"802 11ac  wireless networking standard","id":"i19"},
 		{"text":"Mesh networking","id":"i20"},
@@ -147,7 +147,6 @@ d3.csv('data/issues_data.csv', function (data){
 	}
 	//ties
 	var tieID = $.map(theData.rank(), function (d){ return (d.tie) ? d.sort : null });
-	console.log(tieID);
 
 	var issueElements = svg.selectAll('.issue')
 		.data(theData.summary, function (d){ return d.id })
@@ -256,13 +255,8 @@ d3.csv('data/issues_data.csv', function (data){
 			.transition()
 			.delay(function (d,i){ return d.rank * 50})
 			.attr('x', 100)
-			.attr('y', function (d,i){ 
-				if(d.tie){
-					return y(d.rank) + ((y(2) - y(1))/2) + textOffset;
-				}
-				else{
-					return (y(d.rank) + textOffset);
-			}}).text(function (d,i){ return d.rank});
+			.attr('y', function (d,i){ return y(d.rank) + ( ((y(2) - y(1)) * d.tiedepth)/2 ) + textOffset}) 
+			.text(function (d,i){ return d.rank});
 		
 		numLabel.attr('opacity', function (d,i){ 
 			var c = d3.sum( $.map(tieID, function (h){ return (+h-1===+d.sort)? 1 : 0 }) );
@@ -461,17 +455,21 @@ Data.prototype.rank = function (){
 	var previousScore = 0;
 	var currentRank = 0;
 
-	console.log(sorted)
+	$.map(sorted, function (d,i){
+		d.tiedepth =  d3.sum($.map(sorted.slice(0,i), function (h){
+			return (Math.abs(d.score - h.score) > .00000001) ? 0 : 1;
+		}))
+	});
 
 	return $.map(sorted, function (d,i){
-		if(Math.abs(d.score - previousScore) > .00000001) {
+		if(d.tiedepth == 0) {
 			currentRank += 1;
 			d.rank = currentRank;
 			d.tie = false;
 		}
 		else{
 			d.rank = currentRank;
-			currentRank += 1;
+			currentRank += d.tiedepth;
 			d.tie = true;
 		}
 
