@@ -1,7 +1,7 @@
 /*global define */
-define([], function () {
+define(['d3'], function (d3) {
     'use strict';
-});
+
 
 //get url var for mode switching. REMOVE IN FINAL
 var urlParams;
@@ -84,7 +84,6 @@ var technologies = [{"text":"802 11ac  wireless networking standard","id":"i19"}
 		{"text":"Mobile BI","id":"i62"},
 		{"text":"Big data","id":"i63"},
 		{"text":"Data warehouse","id":"i64"},
-		{"text":"Hadoop","id":"i65"},
 		{"text":"Learning analytics Course level","id":"i66"},
 		{"text":"Learning analytics Degree advising","id":"i67"},
 		{"text":"Predictive analytics","id":"i68"},
@@ -109,11 +108,9 @@ var technologies = [{"text":"802 11ac  wireless networking standard","id":"i19"}
 		{"text":"Speech recognition","id":"i87"},
 		{"text":"Virtual environments","id":"i88"},
 		{"text":"CRM for admissions and enrollment","id":"i89"},
-		{"text":"Big data","id":"i90"},
 		{"text":"Hadoop","id":"i91"},
 		{"text":"Extreme lowenergy servers","id":"i92"},
 		{"text":"Inmemory computing","id":"i93"},
-		{"text":"Hybrid cloud computing","id":"i94"},
 		{"text":"Power over Ethernet","id":"i95"},
 		{"text":"Quantum computing for researchers","id":"i96"},
 		{"text":"Activity streams","id":"i97"},
@@ -124,8 +121,8 @@ var technologies = [{"text":"802 11ac  wireless networking standard","id":"i19"}
 //initalize svg
 var margin = {top: 40, right: 10, bottom: 20, left: 0};
 
-var width = 700 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+var width = 610 - margin.left - margin.right,
+    height = (($(window).width() > 997) ? $('.filter-panel').height() + $('.header').height() : 400) - margin.top - margin.bottom;
 
 var textOffset = 6;
 
@@ -152,14 +149,13 @@ var diagonal = d3.svg.diagonal()
 
 //load data file
 d3.csv('data/issues_data.csv', function (data){
-
+//remove
 	if(urlParams.mode!=undefined){
 		if(urlParams.mode==='technologies'){
 			TYPE = 'technologies';
 			$("h1.title").html("Top-Ten Strategic Technologies: 2014")
 		}
 	}
-	console.log(urlParams)
 
 	var theData = new Data(data);
 	theData.init();
@@ -171,7 +167,7 @@ d3.csv('data/issues_data.csv', function (data){
 	else{
 		y.domain([1,10]);
 	}
-
+	//ties
 	var tieID = $.map(theData.rank(), function (d){ return (d.tie) ? d.sort : null });
 
 	var issueElements = svg.selectAll('.issue')
@@ -233,11 +229,19 @@ d3.csv('data/issues_data.csv', function (data){
 
 	$('.n-label').html('n='+theData.data.length);
 
-	$('input').change(function (e){
 
-		var ccSelected = $.map($('.btn-group.cc').find('input:checked'), function (d){ return $(d).attr('data') });
-		var fteSelected = $.map($('.btn-group.fte').find('input:checked'), function (d){ return $(d).attr('data') });
-		var controlSelected = $.map($('.btn-group.control').find('input:checked'), function (d){ return $(d).attr('data') });
+//FILTER BUTTON EVENT
+	$('.filter-button').click(function (e){
+		if($(this).hasClass('active')){
+			$(this).removeClass('active');
+		}
+		else{
+			$(this).addClass('active');
+		}	
+
+		var ccSelected = $.map($('.btn-group.cc').find('.filter-button.active'), function (d){ return $(d).attr('data') });
+		var fteSelected = $.map($('.btn-group.fte').find('.filter-button.active'), function (d){ return $(d).attr('data') });
+		var controlSelected = $.map($('.btn-group.control').find('.filter-button.active'), function (d){ return $(d).attr('data') });
 
 		theData.filter( ccSelected, fteSelected, controlSelected,true );
 
@@ -315,7 +319,90 @@ d3.csv('data/issues_data.csv', function (data){
 			.attr('d', diagonal);
 
 			})
+//reset
+	$('.reset-btn').click(function (){
+		
+		$('.filter-button').addClass('active');
 
+		theData.init();
+		theData.rank();
+
+			if( theData.rank().filter(function (d){return d.sort == 11})[0].tie ){
+			y.domain([1,11]);
+		}
+		else{
+			y.domain([1,10]);
+		}
+
+		issueElements = svg.selectAll('.issue')
+			.data(theData.rank(),function (d){ return d.id });
+
+		issueElements.transition()
+			.delay(function (d,i){ return d.rank * 50})
+			.attr('y', function (d,i){ return y(d.sort) + textOffset})
+			.attr('x', 120)
+			.text(function (d,i){ return d.text});
+
+		issueElements.enter()
+			.append('text')
+			.attr('class', 'issue')
+			.attr('y', function (d,i){ return y(d.sort) + textOffset})
+			.attr('x', 100)
+			.attr('opacity', 0)
+			.text(function (d,i){ return d.rank + '. ' + d.text})
+			.transition()
+			.attr('opacity', 1);
+
+		var tieID = $.map(theData.rank(), function (d){ return (d.tie) ? d.sort : null });
+
+		numLabel.data(theData.summary, function (d,i){ return d.id })
+			.transition()
+			.delay(function (d,i){ return d.rank * 50})
+			.attr('x', 100)
+			.attr('y', function (d,i){ 
+				if(d.tie){
+					return y(d.rank) + ((y(2) - y(1))/2) + textOffset;
+				}
+				else{
+					return (y(d.rank) + textOffset);
+			}}).text(function (d,i){ return d.rank});
+		
+		numLabel.attr('opacity', function (d,i){ 
+			var c = d3.sum( $.map(tieID, function (h){ return (+h-1===+d.sort)? 1 : 0 }) );
+				if(c > 0){
+					return 0;
+				}
+				else{
+					return 1;
+				}
+			});
+
+		issueDots.data(theData.rank(),function (d){ return d.id })
+			.transition()
+			.delay(function (d,i){ return d.rank * 50})
+			.attr('fill-opacity', function(d){ return (theData.data.length == 444) ? 0 : 1 })
+			.attr('fill', function (d){ return getColor(d) })
+			.attr('cy', function (d,i){ return y(d.originalRank)});
+
+		issueElements.exit().transition().attr('opacity','0').remove();
+
+		evaluateButtons(theData);
+		$('.n-label').html('n='+theData.data.length);
+
+		filteredLabel.transition().attr('opacity', 1);
+		originalLabel.transition().attr('opacity', 1);
+
+		var link = svg.selectAll('.link')
+			.data(theData.rank())
+			.transition()
+			.delay(function (d,i){ return d.rank * 50})
+			.attr('stroke', function (d){ return getColor(d) })
+			.attr('stroke-opacity', .4)
+			.attr('d', diagonal);
+
+
+		
+	})
 });
 
 //------------------------Data object--------------
@@ -342,6 +429,11 @@ Data.prototype.filter = function (cc, fte, control, save){
 	var fteFilter = this.cf.dimension(function (d){ return d.fte }),
 	 	controlFilter = this.cf.dimension(function (d){ return d.control }),
 	 	ccFilter = this.cf.dimension(function (d){ return d.carnegie });
+
+	if(cc.indexOf('6') > 0){
+		fte = fte.concat([0]);
+		control = control.concat([0]);
+	};
 
 	//apply filters from selected checkboxes to crossfilter
 	fteFilter.filterFunction(function (d){ return d3.sum($.map(fte, function (h){ return (+h === +d) ? 1 : 0 })) });
@@ -391,7 +483,7 @@ Data.prototype.rank = function (){
 	var currentRank = 0;
 
 	return $.map(sorted, function (d,i){
-		if(Math.abs(d.score - previousScore) > .001) {
+		if(Math.abs(d.score - previousScore) > .00000001) {
 			currentRank += 1;
 			d.rank = currentRank;
 			d.tie = false;
@@ -439,7 +531,7 @@ Data.prototype.init = function (){
 	var currentRank = 0;
 
 	this.summary = $.map(sorted, function (d){
-		if(Math.abs(d.originalScore - previousScore) > .001) {
+		if(Math.abs(d.originalScore - previousScore) > .00000001) {
 			currentRank += 1;
 		}
 
@@ -460,39 +552,46 @@ function obSort(name){
 }
 //evaluate each button
 function evaluateButtons(data){
-	var ccSelected = $.map($('.btn-group.cc').find('input:checked'), function (d){ return $(d).attr('data') });
-	var fteSelected = $.map($('.btn-group.fte').find('input:checked'), function (d){ return $(d).attr('data') });
-	var controlSelected = $.map($('.btn-group.control').find('input:checked'), function (d){ return $(d).attr('data') });
 
-	$.map($('.btn-group').find('input:checked'), function (d){ 
-		var c = $(d.parentElement.parentElement).attr('class').split(' ')[1];
+	var ccSelected = $.map($('.btn-group.cc').find('.filter-button.active'), function (d){ return $(d).attr('data') });
+	var fteSelected = $.map($('.btn-group.fte').find('.filter-button.active'), function (d){ return $(d).attr('data') });
+	var controlSelected = $.map($('.btn-group.control').find('.filter-button.active'), function (d){ return $(d).attr('data') });
+
+	$.map($('.btn-group').find('.filter-button.active'), function (d){ 
+		var c = $(d.parentElement).attr('class').split(' ')[1];
 		var n = $(d).attr('data');
 		switch(c){
 			case 'cc':
 				var opposite = $.map(ccSelected, function (h){ return (h != $(d).attr('data')) ? h : null });
 				if( data.checkLength( opposite, fteSelected, controlSelected ) ){
 					$(d).prop('disabled', false);
+					$(d).removeClass('disabled');
 				}
 				else{
 					$(d).prop('disabled', true);
+					$(d).addClass('disabled');
 				}
 			break;
 			case 'fte':
 				var opposite = $.map(fteSelected, function (h){ return (h != $(d).attr('data')) ? h : null });
 				if( data.checkLength( ccSelected, opposite, controlSelected ) ){
 					$(d).prop('disabled', false);
+					$(d).removeClass('disabled');
 				}
 				else{
 					$(d).prop('disabled', true);
+					$(d).addClass('disabled');
 				}
 			break;
 			case 'control':
 				var opposite = $.map(controlSelected, function (h){ return (h != $(d).attr('data')) ? h : null });
 				if( data.checkLength( ccSelected, fteSelected, opposite ) ){
 					$(d).prop('disabled', false);
+					$(d).removeClass('disabled');
 				}
 				else{
 					$(d).prop('disabled', true);
+					$(d).addClass('disabled');
 				}
 			break;
 		}
@@ -513,3 +612,4 @@ function getColor(d){
 	}
 	return rval;
 }
+});

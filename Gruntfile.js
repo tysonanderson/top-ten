@@ -1,4 +1,4 @@
-// Generated on 2014-01-11 using generator-webapp 0.4.3
+// Generated on 2014-01-16 using generator-webapp 0.4.3
 'use strict';
 
 // # Globbing
@@ -260,6 +260,7 @@ module.exports = function (grunt) {
                     src: [
                         '*.{ico,png,txt}',
                         '.htaccess',
+                        'data/issues_data.csv',
                         'images/{,*/}*.{webp,gif}',
                         'styles/fonts/{,*/}*.*'
                     ]

@@ -9,7 +9,7 @@
     font-size: 3em;
 }
 .lead{
-    font-size: 18px;
+    font-size: 16px;
 }
 .header{
     border-bottom: 1px solid #d3d3d3;
@@ -20,8 +20,25 @@
 .rankings{
     margin-top: 20px;
 }
-.btn{
+.btn-default{
     font-size: 12px;
+    border-color: #bce4ed !important;
+}
+.btn-default.active:focus{
+    background-color: #75c0d8;
+    color: #fff;
+    
+}
+.btn-default.active{
+    background-color: #75c0d8;
+    color: #fff;
+}
+.btn-default.disabled,.btn-default[disabled]{
+    background-color: #75c0d8 !important;
+    color: #fff;
+}
+.btn-default:focus{
+    background-color: #fff;
 }
 .btn-group{
     margin-left: 10px;
@@ -43,14 +60,26 @@
 }
 .branding{
     margin-top: 20px;
+    margin-bottom: 20px;
     float:right;
 }
-
-/* Small devices (tablets, 768px and up) */
-@media (min-width: @screen-sm-min) { 
-
-.container{
-    margin: 0 auto;
+.reset-btn{
+    margin-top: 20px;
 }
+.n-label{
+    margin-top: 20px;
+}
+
+/* Account for smaller devices */
+@media (max-width: 992px) { 
+
+    .container{
+        margin: 0 auto;
+    }
+    .head-filter{
+        border-right: none;
+        border-bottom: 1px solid #d3d3d3;
+    }
+
 
  }

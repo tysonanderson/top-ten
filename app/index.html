@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>topten</title>
+        <title>Top-Ten IT Issues: 2014</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
          <!-- build:css styles/bootstrap.css -->
@@ -19,12 +19,7 @@
         <!-- build:js scripts/vendor/modernizr.js -->
         <script src="bower_components/modernizr/modernizr.js"></script>
         <!-- endbuild -->
-        <!-- build:js scripts/vendor/crossfilter.js -->
-        <script src="bower_components/crossfilter/crossfilter.js"></script>
-        <!-- endbuild -->
-        <!-- build:js scripts/vendor/d3.js -->
-        <script src="bower_components/d3/d3.js"></script>
-        <!-- endbuild -->
+
     </head>
     <body>
         <!--[if lt IE 10]>
@@ -33,63 +28,43 @@
 
 
         <div class="container">
+<!--         <span class="visible-xs">SIZE XS</span><span class="visible-sm">SIZE SM</span><span class="visible-md">SIZE MD</span><span class="visible-lg">SIZE LG</span> -->
             <div class="col-md-6 col-sm-12 head-filter">
                 <div class="header">
-                    <h1 class="title">Top-Ten IT Issues: 2014</h1>
-                    <p class="explainer lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vestibulum neque et eleifend tristique. Integer in dictum nunc, ac commodo erat. Cras ultricies tincidunt tortor, sit amet egestas arcu malesuada non. Cras laoreet, libero sed dictum lacinia, tortor erat hendrerit turpis, non lacinia leo massa sit amet risus.</p>
+                    <h1 class="title">TOP-TEN IT ISSUES: 2014</h1>
+                    <p class="explainer lead">What are the top information technology-related issues facing higher education this year? Based on input from the EDUCAUSE IT Issues Panel, this annual top-ten list covers the most important technology issues, problems, and proposals that CIOs and IT leaders are considering in 2014. IT and higher education leaders use this top-ten list to calibrate their IT-related activities and inform their strategic planning.</p>
+
+                    <p class="explainer lead">The unfiltered list to the right depicts the rank order of the 2014 top-ten IT issues. The Carnegie class, Control, and FTE filters below can be used customize the list to represent the top-ten issues at a certain kind of institution. For more information about the EDUCAUSE Top-Ten IT issues visit the <a href="http://www.educause.edu/research-and-publications/research/top-10-it-issues">project hub.</a></p>
                 </div>
                 <div class="filter-panel">
                     <h4>FILTERS</h4>
                     <h6 class="filter-label">Carnegie Class:</h6>
                     <div class="btn-group cc">
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="1"> AA
-                      </label>
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="2"> BA
-                      </label>
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="3"> MA
-                      </label>
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="4"> DR
-                      </label>
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="6"> International
-                      </label>
+                      <button class="btn btn-default active filter-button btn-sm" data="1" >AA</button>
+                      <button class="btn btn-default active filter-button btn-sm" data="2">BA</button>
+                      <button class="btn btn-default active filter-button btn-sm" data="4" >MA</button>
+                      <button class="btn btn-default active filter-button btn-sm" data="6">DR</button>
+                      <button class="btn btn-default active filter-button btn-sm" data="9">International</button>
                     </div>
                     <h6>Control:</h6>
                     <div class="btn-group control">
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="1"> Public
-                      </label>
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="2"> Private
-                      </label>
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="3"> Profit
-                      </label>
+                      <button class="btn btn-default active filter-button btn-sm" data="1">Public</button>
+                      <button class="btn btn-default active filter-button btn-sm" data="2">Private</button>
                     </div>
                     <h6>FTE:</h6>
                     <div class="btn-group fte">
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="1"> &lt; 2,000
-                      </label>
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="2"> 2,000&mdash;3,999
-                      </label>
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="3"> 4,000&mdash;7,999
-                      </label>
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="4"> 8,000&mdash;14,999
-                      </label>
-                      <label class="btn btn-default">
-                        <input type="checkbox" checked data="5"> 15,000+
-                      </label>
+                      <button class="btn btn-default active filter-button btn-sm" data="1">&lt; 2,000</button>
+                      <button class="btn btn-default active filter-button btn-sm" data="2">2,000&mdash;3,999</button>
+                      <button class="btn btn-default active filter-button btn-sm" data="3">4,000&mdash;7,999</button>
+                      <button class="btn btn-default active filter-button btn-sm" data="4">8,000&mdash;14,999</button>
+                      <button class="btn btn-default active filter-button btn-sm" data="5">15,000+</button>
                     </div>
                 </div>
-                <h6 class="n-label"></h6>
+                <div>
+                  <button class="btn btn-default btn-md reset-btn inline pull-left">Reset</button>
+                  <h6 class="n-label inline pull-right"></h6>
+                </div>
+                
             </div>
 
             <div class="col-md-6 col-sm-12 rankings">
@@ -107,9 +82,6 @@
         <!-- bower:js -->
         <script src="bower_components/jquery/jquery.js"></script>
         <!-- endbower -->
-        <!-- endbuild -->
-        <!-- build:js scripts/vendor/bootstrap.js -->
-        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <!-- endbuild -->
 
         <!-- build:js scripts/main.js -->
