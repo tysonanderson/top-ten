@@ -2,22 +2,7 @@
 define(['d3'], function (d3) {
     'use strict';
 
-
-//get url var for mode switching. REMOVE IN FINAL
-var urlParams;
-(window.onpopstate = function () {
-    var match,
-        pl     = /\+/g,  // Regex for replacing addition symbol with a space
-        search = /([^&=]+)=?([^&]*)/g,
-        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
-        query  = window.location.search.substring(1);
-
-    urlParams = {};
-    while (match = search.exec(query))
-       urlParams[decode(match[1])] = decode(match[2]);
-})();
-
-var TYPE = 'issues';
+var TYPE = $('.container').attr('vismode');
 
 var issues2 = [{'text': 'Determining the role of online learning', 'id':'i1'},
 		{'text': 'Improving student outcomes', 'id':'i2'},
@@ -149,13 +134,6 @@ var diagonal = d3.svg.diagonal()
 
 //load data file
 d3.csv('data/issues_data.csv', function (data){
-//remove
-	if(urlParams.mode!=undefined){
-		if(urlParams.mode==='technologies'){
-			TYPE = 'technologies';
-			$("h1.title").html("Top-Ten Strategic Technologies: 2014")
-		}
-	}
 
 	var theData = new Data(data);
 	theData.init();
