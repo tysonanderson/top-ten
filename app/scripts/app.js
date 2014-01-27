@@ -147,6 +147,7 @@ d3.csv('data/issues_data.csv', function (data){
 	}
 	//ties
 	var tieID = $.map(theData.rank(), function (d){ return (d.tie) ? d.sort : null });
+	console.log(tieID);
 
 	var issueElements = svg.selectAll('.issue')
 		.data(theData.summary, function (d){ return d.id })
@@ -459,6 +460,8 @@ Data.prototype.rank = function (){
 
 	var previousScore = 0;
 	var currentRank = 0;
+
+	console.log(sorted)
 
 	return $.map(sorted, function (d,i){
 		if(Math.abs(d.score - previousScore) > .00000001) {
