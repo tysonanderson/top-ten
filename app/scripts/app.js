@@ -229,6 +229,7 @@ d3.csv('data/issues_data.csv', function (data){
 		else{
 			y.domain([1,10]);
 		}
+		debugPrint(theData.rank())
 
 		issueElements = svg.selectAll('.issue')
 			.data(theData.rank(),function (d){ return d.id });
@@ -576,6 +577,11 @@ function evaluateButtons(data){
 		}
 
 		return d });
+}
+function debugPrint(data){
+	console.log("----------------------")
+	console.log("TEXT |", "SCORE |", "RANK")
+	$.map(data, function (d){ console.log(d.text, d.score, d.rank)});
 }
 function getColor(d){ 
 	var val = d.rank - d.originalRank;
