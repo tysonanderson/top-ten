@@ -404,10 +404,10 @@ Data.prototype.filter = function (cc, fte, control, save){
 	 	controlFilter = this.cf.dimension(function (d){ return d.control }),
 	 	ccFilter = this.cf.dimension(function (d){ return d.carnegie });
 
-	if(cc.indexOf('6') > 0){
-		fte = fte.concat([0]);
-		control = control.concat([0]);
-	};
+	// if(cc.indexOf('9') > 0){
+	// 	fte = fte.concat([0]);
+	// 	control = control.concat([0]);
+	// };
 
 	//apply filters from selected checkboxes to crossfilter
 	fteFilter.filterFunction(function (d){ return d3.sum($.map(fte, function (h){ return (+h === +d) ? 1 : 0 })) });
