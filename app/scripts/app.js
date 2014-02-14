@@ -23,25 +23,25 @@ var issues2 = [{"text": "Determining the role of online learning", "id":"i1"},
 		{"text": "Sourcing technologies and services at scale", "id":"i17"},
 		{"text": "Risk mgmt infosec practices", "id":"i18"}];
 
-var technologies = [{"text":"802 11ac  wireless networking standard","id":"i19"},
+var technologies = [{"text":"802.11ac wireless networking standard","id":"i19"},
 		{"text":"Mesh networking","id":"i20"},
-		{"text":"Softwaredefined networks","id":"i21"},
+		{"text":"Software‐defined networks","id":"i21"},
 		{"text":"Virtual desktops or virtual PC applications","id":"i22"},
 		{"text":"IT accessibility assessment tools","id":"i23"},
 		{"text":"Network performance monitoring tools","id":"i24"},
-		{"text":"Privatecloud storage","id":"i25"},
+		{"text":"Private‐cloud storage","id":"i25"},
 		{"text":"Network capacity planning and management tools","id":"i26"},
 		{"text":"Data center capacity planning and management tools","id":"i27"},
 		{"text":"IT asset management tools","id":"i28"},
-		{"text":"Servicelevel reporting tools","id":"i29"},
+		{"text":"Service level reporting tools","id":"i29"},
 		{"text":"Unified communications and collaboration","id":"i30"},
 		{"text":"Ethernet fabrics","id":"i31"},
 		{"text":"Biometric authentication","id":"i32"},
-		{"text":"Contentaware DLP","id":"i33"},
+		{"text":"Content‐aware data loss protection (DLP)","id":"i33"},
 		{"text":"Database encryption","id":"i34"},
-		{"text":"Esignatures","id":"i35"},
-		{"text":"Email encryption","id":"i36"},
-		{"text":"Ent identity and access mgmt solns","id":"i37"},
+		{"text":"E‐signatures","id":"i35"},
+		{"text":"E‐mail encryption","id":"i36"},
+		{"text":"Enterprise identity and access management solutions","id":"i37"},
 		{"text":"Federated ID management","id":"i38"},
 		{"text":"PCI data security standards","id":"i39"},
 		{"text":"Strong authentication for critical applications","id":"i40"},
@@ -49,53 +49,52 @@ var technologies = [{"text":"802 11ac  wireless networking standard","id":"i19"}
 		{"text":"Digital preservation of research data","id":"i42"},
 		{"text":"Digital repositories for researchers and scholars","id":"i43"},
 		{"text":"Open content","id":"i44"},
-		{"text":"Selfpublishing","id":"i45"},
-		{"text":"Cloudbased HPC","id":"i46"},
+		{"text":"Self‐publishing","id":"i45"},
+		{"text":"Cloud‐based HPC","id":"i46"},
 		{"text":"Mobile apps for enterprise applications","id":"i47"},
 		{"text":"Mobile app development","id":"i48"},
 		{"text":"Mobile data protection","id":"i49"},
 		{"text":"Mobile device management","id":"i50"},
 		{"text":"Adaptive learning","id":"i51"},
-		{"text":"Badging open digital microcredentials","id":"i52"},
-		{"text":"Eportfolios","id":"i53"},
-		{"text":"Ebook readers etextbooks","id":"i54"},
+		{"text":"Badging/open digital microcredentials","id":"i52"},
+		{"text":"E‐portfolios","id":"i53"},
+		{"text":"E‐book readers, e‐textbooks","id":"i54"},
 		{"text":"Gamification","id":"i55"},
 		{"text":"Mashware","id":"i56"},
 		{"text":"Online courses on mobile devices","id":"i57"},
-		{"text":"Cloudbased academic applications","id":"i58"},
-		{"text":"Admin or business performance analytics","id":"i59"},
-		{"text":"Analytics","id":"i60"},
+		{"text":"Cloud‐based academic applications","id":"i58"},
+		{"text":"Administrative or business performance analytics","id":"i59"},
 		{"text":"BI reporting dashboards","id":"i61"},
 		{"text":"Mobile BI","id":"i62"},
 		{"text":"Big data","id":"i63"},
 		{"text":"Data warehouse","id":"i64"},
-		{"text":"Learning analytics Course level","id":"i66"},
-		{"text":"Learning analytics Degree advising","id":"i67"},
+		{"text":"Learning analytics: Course level","id":"i66"},
+		{"text":"Learning analytics: Degree advising","id":"i67"},
 		{"text":"Predictive analytics","id":"i68"},
 		{"text":"Talent workforce analytics","id":"i69"},
 		{"text":"Text content analytics","id":"i70"},
-		{"text":"Cloudbased admin ent applications","id":"i71"},
-		{"text":"Cloudbased email for faculty and staff","id":"i72"},
-		{"text":"Cloudbased office productivity suites","id":"i73"},
-		{"text":"Application PaaS","id":"i74"},
-		{"text":"IaaS","id":"i75"},
-		{"text":"Cloudbased video streaming solutions","id":"i76"},
-		{"text":"Cloudbased voice solutions","id":"i77"},
+		{"text":"Cloud‐based administrative enterprise applications","id":"i71"},
+		{"text":"Cloud‐based e‐mail for faculty and staff","id":"i72"},
+		{"text":"Cloud‐based office productivity suites","id":"i73"},
+		{"text":"Application platform as a service (PaaS)","id":"i74"},
+		{"text":"Infrastructure as a service (IaaS)","id":"i75"},
+		{"text":"Cloud‐based video streaming solutions","id":"i76"},
+		{"text":"Cloud‐based voice solutions","id":"i77"},
 		{"text":"Hybrid cloud computing","id":"i78"},
-		{"text":"Cloudbased security services","id":"i79"},
+		{"text":"Cloud‐based security services","id":"i79"},
 		{"text":"Institutional support for public cloud storage","id":"i80"},
 		{"text":"3D printing","id":"i81"},
 		{"text":"3D scanners","id":"i82"},
 		{"text":"Tablet computing","id":"i83"},
-		{"text":"The internet of things","id":"i84"},
+		{"text":"The Internet of Things","id":"i84"},
 		{"text":"Social media","id":"i85"},
 		{"text":"Location intelligence","id":"i86"},
 		{"text":"Speech recognition","id":"i87"},
 		{"text":"Virtual environments","id":"i88"},
 		{"text":"CRM for admissions and enrollment","id":"i89"},
 		{"text":"Hadoop","id":"i91"},
-		{"text":"Extreme lowenergy servers","id":"i92"},
-		{"text":"Inmemory computing","id":"i93"},
+		{"text":"Extreme‐low‐energy servers","id":"i92"},
+		{"text":"In‐memory computing","id":"i93"},
 		{"text":"Power over Ethernet","id":"i95"},
 		{"text":"Quantum computing for researchers","id":"i96"},
 		{"text":"Activity streams","id":"i97"},
@@ -133,9 +132,9 @@ var diagonal = d3.svg.diagonal()
 
 
 //load data file
-d3.csv('data/issues_data.csv', function (data){
+d3.text('data/issues_data.csv', function (data){
 
-	var theData = new Data(data);
+	var theData = new Data(d3.csv.parse(data));
 	theData.init();
 	theData.rank();
 
@@ -272,6 +271,7 @@ d3.csv('data/issues_data.csv', function (data){
 		issueDots.data(theData.rank(),function (d){ return d.id })
 			.transition()
 			.delay(function (d,i){ return d.rank * 50})
+			.attr('visibility', 'visible')
 			.attr('fill-opacity', function(d){ return (theData.data.length == 444) ? 0 : 1 })
 			.attr('fill', function (d){ return getColor(d) })
 			.attr('cy', function (d,i){ return y(d.originalRank)});
@@ -288,6 +288,7 @@ d3.csv('data/issues_data.csv', function (data){
 			.data(theData.rank())
 			.transition()
 			.delay(function (d,i){ return d.rank * 50})
+			.attr('visibility', 'visible')
 			.attr('stroke', function (d){ return getColor(d) })
 			.attr('stroke-opacity', .4)
 			.attr('d', diagonal);
@@ -314,7 +315,7 @@ d3.csv('data/issues_data.csv', function (data){
 		issueElements.transition()
 			.delay(function (d,i){ return d.rank * 50})
 			.attr('y', function (d,i){ return y(d.sort) + textOffset})
-			.attr('x', 120)
+			.attr('x', 30)
 			.text(function (d,i){ return d.text});
 
 		issueElements.enter()
@@ -332,7 +333,7 @@ d3.csv('data/issues_data.csv', function (data){
 		numLabel.data(theData.summary, function (d,i){ return d.id })
 			.transition()
 			.delay(function (d,i){ return d.rank * 50})
-			.attr('x', 100)
+			.attr('x', 10)
 			.attr('y', function (d,i){ 
 				if(d.tie){
 					return y(d.rank) + ((y(2) - y(1))/2) + textOffset;
@@ -354,6 +355,7 @@ d3.csv('data/issues_data.csv', function (data){
 		issueDots.data(theData.rank(),function (d){ return d.id })
 			.transition()
 			.delay(function (d,i){ return d.rank * 50})
+			.attr('visibility', 'hidden')
 			.attr('fill-opacity', function(d){ return (theData.data.length == 444) ? 0 : 1 })
 			.attr('fill', function (d){ return getColor(d) })
 			.attr('cy', function (d,i){ return y(d.originalRank)});
@@ -363,13 +365,14 @@ d3.csv('data/issues_data.csv', function (data){
 		evaluateButtons(theData);
 		$('.n-label').html('n='+theData.data.length);
 
-		filteredLabel.transition().attr('opacity', 1);
-		originalLabel.transition().attr('opacity', 1);
+		filteredLabel.transition().attr('opacity', 0);
+		originalLabel.transition().attr('opacity', 0);
 
 		var link = svg.selectAll('.link')
 			.data(theData.rank())
 			.transition()
 			.delay(function (d,i){ return d.rank * 50})
+			.attr('visibility', 'hidden')
 			.attr('stroke', function (d){ return getColor(d) })
 			.attr('stroke-opacity', .4)
 			.attr('d', diagonal);
@@ -439,11 +442,11 @@ Data.prototype.summarize = function (){
 	var scores = [];
 	//check for what visualization is running
 	if(TYPE === 'issues'){
-		scores = $.map(issues2, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
+		scores = $.map(issues2, function (d){ return {'score': d3.mean(data, function (h) { return +h[d.id] }) , 'id': d.id}} );
 		this.summary = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
 	}
 	else{
-		scores = $.map(technologies, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
+		scores = $.map(technologies, function (d){ return {'score': d3.mean(data, function (h) { return +h[d.id] }) , 'id': d.id}} );
 		this.summary = technologies.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
 	}
 
@@ -489,14 +492,14 @@ Data.prototype.init = function (){
 	var scores = [];
 	//check for what visualization is running
 		if(TYPE === 'issues'){
-			scores = $.map(issues2, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
+			scores = $.map(issues2, function (d){ return {'score': d3.mean(data, function (h) { return +h[d.id] }) , 'id': d.id}} );
 			this.summary = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
 
 			//join calculated scores with text by id
 			var rankedData = issues2.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
 		}
 		else{
-			scores = $.map(technologies, function (d){ return {'score': d3.sum(data, function (h) { return +h[d.id]/data.length }) , 'id': d.id}} );
+			scores = $.map(technologies, function (d){ return {'score': d3.mean(data, function (h) { return +h[d.id] }) , 'id': d.id}} );
 			this.summary = technologies.map(function (d,i){ return scores.map(function (h){ return (h.id === d.id) ?  $.extend(d,h) : null}).filter(function(d){return d})[0] });
 
 			//join calculated scores with text by id
@@ -525,8 +528,15 @@ Data.prototype.init = function (){
 //---------------Utility functions --------------------
 
 function obSort(name){
-	return function(a,b){
-		return a[name] < b[name] ? -1 : a[name] > b[name] ? 1 : a[name] >= b[name] ? 0 : NaN;
+	if(TYPE === 'issues'){
+		return function(a,b){
+			return a[name] < b[name] ? -1 : a[name] > b[name] ? 1 : a[name] >= b[name] ? 0 : NaN;
+		}
+	}
+	else{
+		return function(a,b){
+			return b[name] < a[name] ? -1 : b[name] > a[name] ? 1 : b[name] >= a[name] ? 0 : NaN;
+		}
 	}
 	
 }
