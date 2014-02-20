@@ -220,6 +220,10 @@ d3.text('data/issues_data.csv', function (data){
 		var fteSelected = $.map($('.btn-group.fte').find('.filter-button.active'), function (d){ return $(d).attr('data') });
 		var controlSelected = $.map($('.btn-group.control').find('.filter-button.active'), function (d){ return $(d).attr('data') });
 
+		console.log('cc',ccSelected);
+		console.log('fte',fteSelected);
+		console.log('control',controlSelected);
+
 		theData.filter( ccSelected, fteSelected, controlSelected,true );
 
 		if( theData.rank().filter(function (d){return d.sort == 11})[0].tie ){
@@ -298,11 +302,12 @@ d3.text('data/issues_data.csv', function (data){
 	$('.reset-btn').click(function (){
 		
 		$('.filter-button').addClass('active');
+		$('.filter-button:contains("International")').removeClass('active');
 
 		theData.init();
 		theData.rank();
 
-			if( theData.rank().filter(function (d){return d.sort == 11})[0].tie ){
+		if( theData.rank().filter(function (d){return d.sort == 11})[0].tie ){
 			y.domain([1,11]);
 		}
 		else{
@@ -391,8 +396,8 @@ function Data(data) {
 };
 //get unfiltered(all) records
 Data.prototype.all = function (){ 
-	var dim = this.cf.dimension(function (d){ return d.fte });
-	var rVal = dim.filter(null).top(Infinity);
+	var dim = this.cf.dimension(function (d){ return d.carnegie });
+	var rVal = dim.filterFunction(function (d){ return d3.sum($.map([1,2,4,6,8], function (h){ return (+h === +d) ? 1 : 0 })) }).top(Infinity);
 
 	dim.dispose();
 
