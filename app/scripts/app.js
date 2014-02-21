@@ -3,6 +3,7 @@ define(['d3'], function (d3) {
     'use strict';
 
 var TYPE = $('.container').attr('vismode');
+var TOLERANCE = (TYPE == 'issues') ? 0.01 : 0.00001; 
 
 var issues2 = [{"text": "Determining the role of online learning", "id":"i1"},
 		{"text": "Improving student outcomes", "id":"i2"},
@@ -118,7 +119,7 @@ var svg = d3.select('.svg-content').append('svg')
 
 //scales
 var y = d3.scale.linear().domain([1,10]).range([0,height]);
-var color = d3.scale.ordinal().range(['#d3d3d3','#75c0d8','#c4d676']);
+var color = d3.scale.ordinal().range(['#d3d3d3','#d3d3d3','#c4d676']);
 
 //create the diagonal generator for the ranking lines
 //the projection here flips the x and y values so the curve is draw the right way
@@ -132,7 +133,7 @@ var diagonal = d3.svg.diagonal()
 
 
 //load data file
-d3.text('data/issues_data.csv', function (data){
+d3.text('data/issues_data_final.csv', function (data){
 
 	var theData = new Data(d3.csv.parse(data));
 	theData.init();
@@ -202,13 +203,14 @@ d3.text('data/issues_data.csv', function (data){
 		.attr('cy', function (d,i){ return y(d.originalRank)});
 
 	var filteredLabel = svg.append('text').attr('opacity', 0).attr('class', 'data-label').attr('x', 83).attr('y', -20).text('Filtered');
-	var originalLabel = svg.append('text').attr('opacity', 0).attr('class', 'data-label').attr('x', 3).attr('y', -20).text('All');
+	var originalLabel = svg.append('text').attr('opacity', 0).attr('class', 'data-label').attr('x', 3).attr('y', -20).text((TYPE == 'issues') ? 'All U.S.' : 'All');
 
 	$('.n-label').html('n='+theData.data.length);
 
 
 //FILTER BUTTON EVENT
 	$('.filter-button').click(function (e){
+
 		if($(this).hasClass('active')){
 			$(this).removeClass('active');
 		}
@@ -220,10 +222,6 @@ d3.text('data/issues_data.csv', function (data){
 		var fteSelected = $.map($('.btn-group.fte').find('.filter-button.active'), function (d){ return $(d).attr('data') });
 		var controlSelected = $.map($('.btn-group.control').find('.filter-button.active'), function (d){ return $(d).attr('data') });
 
-		console.log('cc',ccSelected);
-		console.log('fte',fteSelected);
-		console.log('control',controlSelected);
-
 		theData.filter( ccSelected, fteSelected, controlSelected,true );
 
 		if( theData.rank().filter(function (d){return d.sort == 11})[0].tie ){
@@ -232,7 +230,7 @@ d3.text('data/issues_data.csv', function (data){
 		else{
 			y.domain([1,10]);
 		}
-		debugPrint(theData.rank())
+		//debugPrint(theData.rank())
 
 		issueElements = svg.selectAll('.issue')
 			.data(theData.rank(),function (d){ return d.id });
@@ -276,7 +274,7 @@ d3.text('data/issues_data.csv', function (data){
 			.transition()
 			.delay(function (d,i){ return d.rank * 50})
 			.attr('visibility', 'visible')
-			.attr('fill-opacity', function(d){ return (theData.data.length == 444) ? 0 : 1 })
+			.attr('fill-opacity', function(d){ return (theData.data.length == 444) ? 1 : 1 })
 			.attr('fill', function (d){ return getColor(d) })
 			.attr('cy', function (d,i){ return y(d.originalRank)});
 
@@ -288,6 +286,7 @@ d3.text('data/issues_data.csv', function (data){
 		filteredLabel.transition().attr('opacity', 1);
 		originalLabel.transition().attr('opacity', 1);
 
+
 		var link = svg.selectAll('.link')
 			.data(theData.rank())
 			.transition()
@@ -298,6 +297,7 @@ d3.text('data/issues_data.csv', function (data){
 			.attr('d', diagonal);
 
 			})
+		
 //reset
 	$('.reset-btn').click(function (){
 		
@@ -397,7 +397,7 @@ function Data(data) {
 //get unfiltered(all) records
 Data.prototype.all = function (){ 
 	var dim = this.cf.dimension(function (d){ return d.carnegie });
-	var rVal = dim.filterFunction(function (d){ return d3.sum($.map([1,2,4,6,8], function (h){ return (+h === +d) ? 1 : 0 })) }).top(Infinity);
+	var rVal = dim.filterFunction(function (d){ return d3.sum($.map((TYPE == 'issues') ? [0,1,2,4,6,8] : [0,1,2,4,6,8,9], function (h){ return (+h === +d) ? 1 : 0 })) }).top(Infinity);
 
 	dim.dispose();
 
@@ -464,10 +464,17 @@ Data.prototype.rank = function (){
 	var previousScore = 0;
 	var currentRank = 0;
 
+	//Fake the tie on the initial issues page
 	$.map(sorted, function (d,i){
-		d.tiedepth =  d3.sum($.map(sorted.slice(0,i), function (h){
-			return (Math.abs(d.score - h.score) > .00000001) ? 0 : 1;
-		}))
+		if(d.id == "i18" && initialState()){
+			d.tiedepth = 1;
+		}
+		else{
+			d.tiedepth =  d3.sum($.map(sorted.slice(0,i), function (h){
+				return (Math.abs(d.score - h.score) > TOLERANCE) ? 0 : 1;
+			}))
+		}
+
 	});
 
 	return $.map(sorted, function (d,i){
@@ -519,7 +526,7 @@ Data.prototype.init = function (){
 	var currentRank = 0;
 
 	this.summary = $.map(sorted, function (d){
-		if(Math.abs(d.originalScore - previousScore) > .00000001) {
+		if(Math.abs(d.originalScore - previousScore) > TOLERANCE) {
 			currentRank += 1;
 		}
 
@@ -597,6 +604,13 @@ function debugPrint(data){
 	console.log("----------------------")
 	console.log("TEXT |", "SCORE |", "RANK")
 	$.map(data, function (d){ console.log(d.text, d.score, d.rank)});
+}
+function initialState(){
+	var ccSelected = $.map($('.btn-group.cc').find('.filter-button.active'), function (d){ return $(d).attr('data') }).join();
+	var fteSelected = $.map($('.btn-group.fte').find('.filter-button.active'), function (d){ return $(d).attr('data') }).join();
+	var controlSelected = $.map($('.btn-group.control').find('.filter-button.active'), function (d){ return $(d).attr('data') }).join();
+
+	return (ccSelected == [1,2,4,6,8] && controlSelected == [1,2,0] && fteSelected == [1,2,3,4,5,0])
 }
 function getColor(d){ 
 	var val = d.rank - d.originalRank;
