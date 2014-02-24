@@ -64,10 +64,13 @@
     float:right;
 }
 .reset-btn{
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 .n-label{
-    margin-top: 20px;
+    margin-top: 0px;
+}
+.key{
+    margin-top: 15px;
 }
 
 /* Account for smaller devices */

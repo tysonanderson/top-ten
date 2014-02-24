@@ -5,24 +5,24 @@ define(['d3'], function (d3) {
 var TYPE = $('.container').attr('vismode');
 var TOLERANCE = (TYPE == 'issues') ? 0.01 : 0.00001; 
 
-var issues2 = [{"text": "Determining the role of online learning", "id":"i1"},
+var issues2 = [{"text": "Sustainable online learning", "id":"i1"},
 		{"text": "Improving student outcomes", "id":"i2"},
-		{"text": "Using analytics", "id":"i3"},
-		{"text": "Developing an IT org model", "id":"i4"},
-		{"text": "Assisting faculty with instructional integration", "id":"i5"},
-		{"text": "Addressing access demand", "id":"i6"},
+		{"text": "Analytics to support institutional outcomes", "id":"i3"},
+		{"text": "IT staffing models", "id":"i4"},
+		{"text": "Assisting faculty with information technology", "id":"i5"},
+		{"text": "Access demand", "id":"i6"},
 		{"text": "Balancing innovation with execution", "id":"i7"},
 		{"text": "Competing for IT talent", "id":"i8"},
 		{"text": "Establishing and implementing IT governance", "id":"i9"},
-		{"text": "Changing IT funding models", "id":"i10"},
-		{"text": "Establishing partnership between IT and leadership", "id":"i11"},
-		{"text": "Harnessing the trends toward consumerization", "id":"i12"},
-		{"text": "Supporting the research mission", "id":"i13"},
-		{"text": "Developing an enterprise IT architecture", "id":"i14"},
-		{"text": "Identifying new models", "id":"i15"},
+		{"text": "Funding IT strategically", "id":"i10"},
+		{"text": "Institution-wide IT governance", "id":"i11"},
+		{"text": "IT consumerization and BYOD", "id":"i12"},
+		{"text": "Supporting research (HPC, large data, analytics)", "id":"i13"},
+		{"text": "Enterprise IT architecture", "id":"i14"},
+		{"text": "Using IT to improve operational efficiency", "id":"i15"},
 		{"text": "Optimizing IT efficiency and excellence", "id":"i16"},
-		{"text": "Sourcing technologies and services at scale", "id":"i17"},
-		{"text": "Risk mgmt infosec practices", "id":"i18"}];
+		{"text": "Service delivery strategy", "id":"i17"},
+		{"text": "IT compliance and risk management", "id":"i18"}];
 
 var technologies = [{"text":"802.11ac wireless networking standard","id":"i19"},
 		{"text":"Mesh networking","id":"i20"},
@@ -466,7 +466,7 @@ Data.prototype.rank = function (){
 
 	//Fake the tie on the initial issues page
 	$.map(sorted, function (d,i){
-		if(d.id == "i18" && initialState()){
+		if(d.id == "i14" && initialState()){
 			d.tiedepth = 1;
 		}
 		else{
